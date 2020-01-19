@@ -3,6 +3,6 @@
 #include <stdio.h>
 
 int main(){
-   printf("Pid = %d. Ppid = %d\r\n", (int)getpid(), (int)getppid());
+   printf("Uid = %d. Gid = %d\r\n", (int)getuid(), (int)getgid());
    return 0;
 }
