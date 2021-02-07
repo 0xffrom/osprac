@@ -1,6 +1,6 @@
-// Задача №3.
 #include <stdio.h>
 
+// Задача №3. Семинар 4
 int main(int argc, char *argv[], char *envp[]){
     printf("Количество аргументов командной строки: %d\n\r", argc);
     printf("Аргументы командной строки: ");
