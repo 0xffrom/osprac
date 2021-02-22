@@ -11,6 +11,14 @@ int main() {
 
     char name[]="example.fifo";
 
+    // Если создать FIFO невозможно:
+    if (mknod(name, S_IFIFO | 0666, 0) < 0) {
+        printf("Невозможно создать FIFO!\n\r");
+        exit(-1);
+    }
+
+    printf("FIFO был создан\n\r");
+
     // Пробуем открыть:
     if((fd = open(name, O_WRONLY)) < 0){
         printf("Невозможно открыть FIFO с флагом на запись.\n\r");
