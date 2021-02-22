@@ -3,6 +3,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
 
 int main() {
     (void)umask(0);
@@ -10,12 +12,6 @@ int main() {
     int fd;
 
     char name[]="example.fifo";
-
-    // Если создать FIFO невозможно:
-    if (mknod(name, S_IFIFO | 0666, 0) < 0) {
-        printf("Невозможно создать FIFO!\n\r");
-        exit(-1);
-    }
 
     printf("FIFO был создан\n\r");
 

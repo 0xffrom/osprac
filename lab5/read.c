@@ -4,7 +4,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+/**
+ * Мы должны скомпилить read.c и write.c в два разных файла.
+ * И запускать их по отдельности. Сначала read.c, потом write.c
+ */ 
 int main()
 {
     // Название файла:
