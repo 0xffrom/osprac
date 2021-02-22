@@ -17,18 +17,21 @@ int main()
         exit(-1);
     }
 
-    // Флаг F_SETFL указывает, что мы работаем с файлом
-    // Флаг F_GETFD флаг на получение файлового дескриптора.
-    // Пример взят с linuxlib.ru 
-    fcntl(fd[1], F_SETFL, fcntl(fd[1], F_GETFD | O_NONBLOCK));
-
     // Результирующее количество байт:
     int result = 0;
 
     size_t size = 1;
     // Записывам по 1 байту и инкрементируем счётчик
-    while(size == 1){
+    while(size == 1 && result < 65536) {
+        // Операция write заблокируется как только pipe достигнет предела.
+        // В моём случае это 65536 байт.
         size = write(fd[1], resstring, 1);
+        
+	    if(size != 1){
+            close(fd[1]);
+            exit(-1);
+            break;
+	    }
         result++;
     }
 
