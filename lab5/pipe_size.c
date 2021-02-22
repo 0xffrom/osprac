@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 int main()
 {
@@ -17,24 +18,28 @@ int main()
         exit(-1);
     }
 
-    // Результирующее количество байт:
+    // Флаг F_SETFL указывает, что мы работаем с файлом.
+    // Флаг F_GETFD флаг на получение файлового дискриптора.
+    // Ставим флаг, чтобы поток не заблокировался.
+    // Пример взять в linux
+    fcntl(fd[1], F_SETFL, fcntl(fd[1], F_GETFD | O_NONBLOCK));
+    // Результирующее количество System page:
     int result = 0;
 
     size_t size = 1;
-    // Записывам по 1 байту и инкрементируем счётчик
-    while(size == 1 && result < 65536) {
-        // Операция write заблокируется как только pipe достигнет предела.
-        // В моём случае это 65536 байт.
+    // Подсчитаем количество system page.
+    while(size == 1) {
         size = write(fd[1], resstring, 1);
         
 	    if(size != 1){
+            // result - количество page
+            // sysconf(_SC_PAGESIZE) - размер в байт одного page
+            printf("Всего: %d байт\n\r", result * sysconf(_SC_PAGESIZE));
             close(fd[1]);
             exit(-1);
             break;
 	    }
         result++;
     }
-
-    printf("Всего: %d байт\n\r", result);
     return 0;
 }
