@@ -24,6 +24,8 @@ int decr(int semid, struct sembuf* buf) {
 
 int main()
 {
+  struct sembuf mybuf;
+  int semid;
   int     *array;
   int     shmid;
   int     new = 1;
