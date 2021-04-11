@@ -1,4 +1,4 @@
-#include <errno.h>
+ï»¿#include <errno.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/types.h>
@@ -55,12 +55,12 @@ int main()
   }
 
   if ((semid = semget(key, 1, 0666)) < 0) {
-      printf("Ñåìàôîð íå íàéäåí, ïîâòîðÿþ ïîïûòêó ñ ôëàãîì IPC CREAT...\n");
+      printf("â€”ÐµÐ¼Ð°Ñ„Ð¾Ñ€ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½, Ð¿Ð¾Ð²Ñ‚Ð¾Ñ€Â¤ÑŽ Ð¿Ð¾Ð¿Ñ‹Ñ‚ÐºÑƒ Ñ Ñ„Ð»Ð°Ð³Ð¾Ð¼ IPC CREAT...\n");
       if ((semid = semget(key, 1, 0666 | IPC_CREAT)) < 0) {
-          printf("Ñîçäàòü íåâîçìîæíî, àâàðèéíî çàâåðøàþñü.\n");
+          printf("â€”Ð¾Ð·Ð´Ð°Ñ‚ÑŒ Ð½ÐµÐ²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾, Ð°Ð²Ð°Ñ€Ð¸Ð¹Ð½Ð¾ Ð·Ð°Ð²ÐµÑ€ÑˆÐ°ÑŽÑÑŒ.\n");
           exit(-1);
       }
-      printf("Óñïåøíî ñîçäàí ñåìàôîð!\n");
+      printf("â€ÑÐ¿ÐµÑˆÐ½Ð¾ ÑÐ¾Ð·Ð´Ð°Ð½ ÑÐµÐ¼Ð°Ñ„Ð¾Ñ€!\n");
       incr(semid, &mybuf);
   }
 
