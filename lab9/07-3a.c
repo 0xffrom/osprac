@@ -62,10 +62,7 @@ int main()
         printf("Can't attach shared memory\n");
         exit(-1);
     }
-
-    //Уменьшаем семафор на 1 тем самым не давая
-    //второму процессу изменить хранимые в
-    //разделенной памяти данные
+    
     if (semop(semid, &mybuf, 1) < 0) {
         printf("Can\'t wait for condition\n");
         exit(-1);
