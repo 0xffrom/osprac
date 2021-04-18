@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/sem.h>
-#include <stdlib.h>
 
 int inc(int semid, struct sembuf* buf) {
     buf->sem_op = 1;
@@ -27,18 +26,11 @@ int main()
     int parent[2], result;
     size_t size = 0;
     key_t key;
-    char pathname[] = "05-3.c";
-    struct sembuf mybuf;
+    char pathname[] = "ket";
+    struct sembuf buffer;
 
-    int N;
-    printf("Введите N: \n");
-    scanf("%d", &N);
-    char resstring[14 * N];
-
-    if (N <= 2) {
-        printf("N должен быть больше 2.\n");
-        exit(-1);
-    }
+    int semid;
+    char resstring[14];
 
     // Создаём Pipes родителя и ребёнка:
     if (pipe(parent) < 0) {
@@ -61,6 +53,10 @@ int main()
         printf("Успешно создан!\n");
     }
 
+
+    buffer.sem_flg = 0;
+    buffer.sem_num = 0;
+
     result = fork();
 
     if (result < 0) {
@@ -68,58 +64,67 @@ int main()
         exit(-1);
     }
 
+    // Отец:
     else if (result > 0) {
-        for (int i = 0; i < N; ++i) {
-            size += write(parent[1], "Hello, world!", 14);
-        }
-        
-        // P.s обработка ошибок как в примере.
-        if (size != 14 * N) {
-            printf("Can\'t write all string\n\r");
-            exit(-1);
-        }
-        
-        // Ждём ребёнка:
-        dec(semid, &mybuf); 
-
-        // Читаем ребёнка:
-        size = read(child[0], resstring, 14 * N);
-        if (size != 14 * N) {
-            printf("Can\'t read from child\n\r");
+        int N;
+        printf("Введите N: \n");
+        scanf("%d", &N);
+        if (N < 2) {
+            printf("N должен быть больше или равен 2.\n");
             exit(-1);
         }
 
-        close(child[0]);
-        printf("Отец прочитал с ребёнка: %s\n\rОтец закончил.\n\r", resstring);
+        for (size_t i = 0; i < N; i++)
+        {
+             // Пишем ребёнку
+            size = write(parent[1], "Hello, world!", 14);
+            printf("Пара №%d, Отец отправил рёбенку месседж.\n\r", i + 1);
+
+            if (size != 14) {
+                printf("Can\'t write all string\n\r");
+                exit(-1);
+            }
+
+            inc(semid, &buffer);
+            dec(semid, &buffer);
+             // Читаем ребёнка:
+            size = read(parent[0], resstring, 14);
+
+            if (size != 14) {
+                printf("Can\'t read from child\n\r");
+                exit(-1);
+            }
+
+            printf("Отец прочитал с ребёнка: %s\n\r", resstring);
+        }
+        close(parent[0]);
     }
     else {
         // Ребёнок
-
+        int counter = 0;
         // Читаем отца:
-        size = read(parent[0], resstring, 14 * N);
-        if (size < 0) {
-            printf("Can\'t get from parent\n\r");
-            exit(-1);
-        }
-        // Печатаем, что прочитали:
-        printf("Ребёнок получил с отца: %s\n\r", resstring);
-        // Запишем ребёнком, что прочитали:
-        size = write(parent[1], resstring, 14 * N);
+        while(1){
+            dec(semid, &buffer);
+            size = read(parent[0], resstring, 14);
 
-        // Отцом:
-        inc(semid, &mybuf); 
+            if (size < 0) {
+                close(parent[1]);
+                close(parent[0]);
 
-        if (size != 14 * N) {
-            printf("Невозможно написать всю строку.\n");
-            exit(-1);
-        }
-        else {
-            printf("Всё тип топ.\n");
-        }
+                printf("Всё тип топ, все покинули чат-чат\n");  
+            }
 
-        close(parent[1]);
-        close(parent[0]);
-        printf("Ребёнок вышел\n\r");
+            // Инфа от отца:
+            printf("Пара №%d, Ребёнок получил с отца: %s\n\r", ++counter + 1, resstring);
+
+            // Передадим отцу приветики:
+            if (write(parent[1], "Hi, my parent", 14) != 14) {
+                printf("Невозможно написать всю строку.\n");
+                exit(-1);
+            }
+            // Ждём ответ от бати:
+            inc(semid, &buffer); 
+        }
     }
     return 0;
 }
