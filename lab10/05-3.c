@@ -23,6 +23,7 @@ int dec(int semid, struct sembuf* buf) {
 
 int main()
 {
+    // Инициализируем: 
     int parent[2], result;
     size_t size = 0;
     key_t key;
