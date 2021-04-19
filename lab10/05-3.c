@@ -21,6 +21,12 @@ int dec(int semid, struct sembuf* buf) {
     return semop(semid, buf, 1);
 }
 
+/**
+ * Моя логика: 
+ * Изначально семафор 0, dec - уменьшает значение на 1, inc - увеличивает.
+ * Если значение < 0, то он ждёт.
+ * Логика работы отца и ребёнка расписана прямо в коде.
+ */
 int main()
 {
     // Инициализируем: 
@@ -75,14 +81,14 @@ int main()
         for (size_t i = 0; i < N; i++)
         {
              // Пишем ребёнку
-            size = write(parent[1], "Hello, world!", 14);
-            printf("Пара №%d, Отец отправил рёбенку месседж.\n\r", i + 1);
-
-            if (size != 14) {
+            if (write(parent[1], "Hello, world!", 14) != 14) {
                 printf("Can\'t write all string\n\r");
                 exit(-1);
             }
 
+            printf("Пара №%d, Отец отправил рёбенку месседж.\n\r", i + 1);
+
+            // РАЗРЕШАЕМ ДЕТЁНКУ ПРОЧИТАТЬ, А САМ УХОДИМ В ОЖИДАНИЕ ОТВЕТА ОТ НЕГО:
             inc(semid, &buffer);
             dec(semid, &buffer);
              // Читаем ребёнка:
@@ -102,6 +108,7 @@ int main()
         int counter = 0;
         // Читаем отца:
         while(1){
+            // ЖДЁМ ОТВЕТ ОТ ОТЦА ПОКА ОН ЗАПИШЕТ:
             dec(semid, &buffer);
             size = read(parent[0], resstring, 14);
 
@@ -120,6 +127,7 @@ int main()
                 printf("Невозможно написать всю строку.\n");
                 exit(-1);
             }
+            // ГОВОРИМ ОТЦУ: "ВСЕ ОК, МОЖЕШЬ ЧИТАТЬ МОЙ ПИСЬМО И ЗАПИСЫВАТЬ"
             inc(semid, &buffer);
         }
     }
