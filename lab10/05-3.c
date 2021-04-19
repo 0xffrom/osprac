@@ -26,7 +26,7 @@ int main()
     int parent[2], result;
     size_t size = 0;
     key_t key;
-    char pathname[] = "ket";
+    char pathname[] = "05-3.c";
     struct sembuf buffer;
 
     int semid;
@@ -53,9 +53,6 @@ int main()
         printf("Успешно создан!\n");
     }
 
-
-    buffer.sem_flg = 0;
-    buffer.sem_num = 0;
 
     result = fork();
 
@@ -115,15 +112,14 @@ int main()
             }
 
             // Инфа от отца:
-            printf("Пара №%d, Ребёнок получил с отца: %s\n\r", ++counter + 1, resstring);
+            printf("Пара №%d, Ребёнок получил с отца: %s\n\r", ++counter, resstring);
 
             // Передадим отцу приветики:
             if (write(parent[1], "Hi, my parent", 14) != 14) {
                 printf("Невозможно написать всю строку.\n");
                 exit(-1);
             }
-            // Ждём ответ от бати:
-            inc(semid, &buffer); 
+            inc(semid, &buffer);
         }
     }
     return 0;
