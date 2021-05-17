@@ -46,8 +46,6 @@ int main(void)
         exit(-1);
     }
 
-
-    srand(time(NULL));
     // mtype = 2, так это киллер.
     clientbuf.mtype = 2;
     clientbuf.info.message = 0;

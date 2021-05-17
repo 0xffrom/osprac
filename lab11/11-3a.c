@@ -46,8 +46,6 @@ int main(void)
     exit(-1);
   }
 
-
-srand(time(NULL));
 // Инициализируем клиента
 clientbuf.mtype = 1;
 clientbuf.info.pid = getpid();
