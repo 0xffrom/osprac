@@ -37,6 +37,8 @@ int main(void)
     key_t  key;
     int len, maxlen;
     
+    //https://stackoverflow.com/questions/5339200/how-to-create-a-single-instance-application-in-c-or-c
+    // Вешаем лок на файл, если лок есть - значит сервер работает.
     int pidFile = open("11-3b.c", O_CREAT | O_RDWR, 0666);
     int rc = flock(pidFile, LOCK_EX | LOCK_NB);
     if(!rc){
