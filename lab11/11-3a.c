@@ -60,7 +60,6 @@ clientbuf.info.message = msg;
 printf("Клиент отсылает с type = %d message = '%f'\n", clientbuf.mtype, clientbuf.info.message);
 
 len = sizeof(clientbuf.info);
-// 1, так как ожидаем сообщения от первого чела.
 if (msgsnd(msqid, &clientbuf, len, 0) < 0) {
     printf("Can\'t send message to queue\n");
     msgctl(msqid, IPC_RMID, (struct msqid_ds *) NULL);

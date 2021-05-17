@@ -53,9 +53,13 @@ int main(void)
         }
 
         while(1){
-
-            if (msgrcv(msqid, (struct clientbuf *) &clientbuf, sizeof(clientbuf.info), 1, 0) < 0) {
+            if (msgrcv(msqid, (struct clientbuf *) &clientbuf, sizeof(clientbuf.info), -2, 0) < 0) {
                 printf("Can\'t receive message from queue\n");
+                exit(-1);
+            }
+
+            if(clientbuf.mtype == 2){
+                printf("Меня закиллили\n");
                 exit(-1);
             }
 
