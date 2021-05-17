@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#define MESSAGE_LENGTH 255
 
 /**
  *  Client
@@ -53,7 +52,10 @@ srand(time(NULL));
 clientbuf.mtype = 1;
 clientbuf.info.pid = getpid();
 
-clientbuf.info.message = rand();
+float msg;
+printf("Введите число с плавающей точкой: ");
+scanf("%f", &msg);
+clientbuf.info.message = msg;
 
 printf("Клиент отсылает с type = %d message = '%f'\n", clientbuf.mtype, clientbuf.info.message);
 

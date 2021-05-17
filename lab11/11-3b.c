@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define MESSAGE_LENGTH 255
 
 /**
  *  Server
@@ -57,7 +56,7 @@ int main(void)
         printf("Клиент pid = %d прислал: %f\n", clientbuf.info.pid, clientbuf.info.message);
 
         serverbuf.mtype = clientbuf.info.pid;
-        serverbuf.info.message = clientbuf.info.message;
+        serverbuf.info.message = clientbuf.info.message * clientbuf.info.message;
 
         if (msgsnd(msqid, &serverbuf, sizeof(serverbuf.info), 0) < 0) {
         printf("Can\'t send message to queue\n");
