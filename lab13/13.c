@@ -37,7 +37,7 @@ char* getFileName(int i, int withTemp){
     return filename;
 }
 
-// ПЕРЕД ЗАПУСКОМ СОЗДАЙТЕ ПАПКУ temp.
+// Папка temp создаётся через system.
 
 int main(int argc, char* argv[]){
     char* directory_name = "temp";
