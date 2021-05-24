@@ -23,6 +23,7 @@ int createFile(char* name){
     return 0;
 }
 
+// Получаем указатель на название файла в папке temp или без неё.
 char* getFileName(int i, int withTemp){
     char* filename = malloc(sizeof("100"));
 
@@ -36,6 +37,7 @@ char* getFileName(int i, int withTemp){
     return filename;
 }
 
+// ПЕРЕД ЗАПУСКОМ СОЗДАЙТЕ ПАПКУ temp.
 
 int main(int argc, char* argv[]){
     char* directory_name = "temp";
@@ -44,8 +46,7 @@ int main(int argc, char* argv[]){
     
     DIR *dir = opendir(directory_name);
 
-
-    // Создайте папку temp.
+    // Проверка на папку temp:
     if(dir == NULL){
         printf("Error with open directory\n");
         exit(1);
@@ -70,10 +71,17 @@ int main(int argc, char* argv[]){
             return -1;
         }
 
-        if(fopen(nextFile, "r") == NULL){
-            printf("%d\n", counter);
+        
+        // Пытаемся открыть файл и определить, корректная ссылка или нет
+        // если битая ссылка, то вылезет Null
+        FILE* newFile = fopen(nextFile, "r");
+        if(newFile == NULL){
+            // ПОСЛЕДНИЙ ФАЙЛ НЕ УЧИТЫВАЕМ.
+            printf("%d\n", counter - 1);
             exit(1);
          }
+
+        fclose(newFile);
 
         free(prevFile);
         free(nextFile);
