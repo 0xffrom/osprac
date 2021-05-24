@@ -21,22 +21,19 @@ int createFile(char* name){
     return 0;
 }
 
-char* getFileNameByPrev(int i){
-    char* filename = malloc(sizeof("999999999999"));
+char* getFileName(int i, int withTemp){
+    char* filename = malloc(sizeof("100"));
 
-    sprintf(filename, "temp/%010d", i);
-
-    return filename;
-}
-
-
-char* getFileNameSymbol(int i){
-    char* filename = malloc(sizeof("999999999999"));
-
-    sprintf(filename, "%010d", i);
+    if(withTemp == 0){
+        sprintf(filename, "temp/%03d", i);
+    }
+    else{
+        sprintf(filename, "%03d", i);
+    }
 
     return filename;
 }
+
 
 int main(int argc, char* argv[]){
     char* directory_name = "temp";
@@ -52,7 +49,7 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    if(createFile(getFileNameByPrev(0))){
+    if(createFile(getFileName(0, 0))){
         /* Если файл открыть не удалось, выдаем сообщение об ошибке и завершаем работу */
         printf("File open failed!\n");
         exit(1);
@@ -61,8 +58,8 @@ int main(int argc, char* argv[]){
     int counter = 1;
 
     while(1){
-        char* prevFile = getFileNameSymbol(counter - 1);
-        char* nextFile = getFileNameByPrev(counter);
+        char* prevFile = getFileName(counter - 1, 1);
+        char* nextFile = getFileName(counter, 0);
 
         int sym = symlink(prevFile, nextFile);
 
@@ -73,7 +70,6 @@ int main(int argc, char* argv[]){
 
         if(fopen(nextFile, "r") == NULL){
             printf("%d\n", counter);
-            
             exit(1);
          }
 
