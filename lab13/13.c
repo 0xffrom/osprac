@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 
+// Делал эту лабу с 22:00 по 23:00 23-го числа, а потом ещё с 8 утра по 13:00. Было интересно, спасибо!
+
 int createFile(char* name){
     FILE* fd = fopen(name, "w");
 
