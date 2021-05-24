@@ -17,6 +17,8 @@ int createFile(char* name){
         printf("File open failed!\n");
        return 1;
     }
+    
+    fputs("https://www.youtube.com/watch?v=Unj9WbeLzRU", fd);
 
     fclose(fd);
 
@@ -28,7 +30,7 @@ char* getFileName(int i, int withTemp){
     char* filename = malloc(sizeof("100"));
 
     if(withTemp == 0){
-        sprintf(filename, "temp/%03d", i);
+        sprintf(filename, "temp/%05d", i);
     }
     else{
         sprintf(filename, "%03d", i);
@@ -36,6 +38,7 @@ char* getFileName(int i, int withTemp){
 
     return filename;
 }
+
 
 void mFree(char* f1, char* f2){
     free(f1);
