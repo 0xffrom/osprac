@@ -47,10 +47,13 @@ int main(int argc, char* argv[]){
     DIR *dir = opendir(directory_name);
 
     // Проверка на папку temp:
-    if(dir == NULL){
-        printf("Error with open directory\n");
-        exit(1);
+    if(dir != NULL){
+        // Если папка есть - значит удаляем её и все файлы внутри.
+       system("rm -r temp");
     }
+
+    // Создать папку temp, её либо не было, либо удалили
+    system("mkdir temp");
 
     if(createFile(getFileName(0, 0))){
         /* Если файл открыть не удалось, выдаем сообщение об ошибке и завершаем работу */
