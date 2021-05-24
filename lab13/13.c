@@ -30,7 +30,7 @@ char* getFileName(int i, int withTemp){
     char* filename = malloc(sizeof("100"));
 
     if(withTemp == 0){
-        sprintf(filename, "temp/%05d", i);
+        sprintf(filename, "temp/%03d", i);
     }
     else{
         sprintf(filename, "%03d", i);
