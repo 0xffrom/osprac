@@ -67,11 +67,9 @@ int main(int argc, char* argv[]){
         char* prevFile = getFileName(counter - 1, 1);
         char* nextFile = getFileName(counter, 0);
 
-        int sym = symlink(prevFile, nextFile);
-
-        if(sym){
+        if(symlink(prevFile, nextFile)) {
+            printf("Symlink error\n");
             exit(-1);
-            return -1;
         }
 
         
