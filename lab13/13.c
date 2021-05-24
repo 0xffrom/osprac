@@ -37,6 +37,11 @@ char* getFileName(int i, int withTemp){
     return filename;
 }
 
+void mFree(char* f1, char* f2){
+    free(f1);
+    free(f2);
+}
+
 // Папка temp создаётся через system.
 
 int main(int argc, char* argv[]){
@@ -55,11 +60,15 @@ int main(int argc, char* argv[]){
     // Создать папку temp, её либо не было, либо удалили
     system("mkdir temp");
 
-    if(createFile(getFileName(0, 0))){
+    char* firstName = getFileName(0, 0);
+    if(createFile(firstName)){
         /* Если файл открыть не удалось, выдаем сообщение об ошибке и завершаем работу */
+        free(firstName);
         printf("File open failed!\n");
         exit(1);
     }
+
+    free(firstName);
 
     int counter = 1;
 
@@ -68,6 +77,8 @@ int main(int argc, char* argv[]){
         char* nextFile = getFileName(counter, 0);
 
         if(symlink(prevFile, nextFile)) {
+            mFree(prevFile, nextFile);
+
             printf("Symlink error\n");
             exit(-1);
         }
@@ -79,13 +90,14 @@ int main(int argc, char* argv[]){
         if(newFile == NULL){
             // ПОСЛЕДНИЙ ФАЙЛ НЕ УЧИТЫВАЕМ.
             printf("%d\n", counter - 1);
+
+            mFree(prevFile, nextFile);
+
             exit(1);
          }
 
         fclose(newFile);
-
-        free(prevFile);
-        free(nextFile);
+        mFree(prevFile, nextFile);
 
         counter++;
     }
